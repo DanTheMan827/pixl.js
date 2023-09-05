@@ -159,6 +159,8 @@ void nrf_pwr_mgmt_shutdown(nrf_pwr_mgmt_shutdown_t shutdown_type);
 void nrf_pwr_mgmt_set_timeout(uint16_t timeout);
 
 uint16_t nrf_pwr_mgmt_get_timeout();
+void pwr_mgmt_standby_timeout_enable();
+void pwr_mgmt_standby_timeout_disable();
 
 #ifdef __cplusplus
 }

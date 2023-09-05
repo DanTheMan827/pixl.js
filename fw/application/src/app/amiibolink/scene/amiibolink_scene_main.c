@@ -11,6 +11,7 @@
 #include "ntag_emu.h"
 #include "ntag_store.h"
 
+#include "nrf_pwr_mgmt.h"
 #include "nrf_log.h"
 
 #include "settings.h"
@@ -162,6 +163,8 @@ void amiibolink_scene_main_on_enter(void *user_data) {
 
     settings_data_t *p_settings = settings_get_data();
 
+    pwr_mgmt_standby_timeout_disable();
+
     // enable ble
     ble_init();
     uint8_t device_mode;
@@ -200,4 +203,6 @@ void amiibolink_scene_main_on_exit(void *user_data) {
     ble_disable();
     ble_nus_set_handler(NULL, NULL);
     ntag_emu_set_update_cb(NULL, NULL);
+
+    pwr_mgmt_standby_timeout_enable();
 }

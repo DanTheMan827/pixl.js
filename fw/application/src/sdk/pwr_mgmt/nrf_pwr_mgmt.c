@@ -233,6 +233,7 @@ static nrf_drv_wdt_channel_id m_channel_id;
     static uint16_t m_standby_counter;     /**< Number of seconds from the last activity
                                                 (@ref pwr_mgmt_feed). */
     static uint16_t m_timeout_counter = NRF_PWR_MGMT_CONFIG_STANDBY_TIMEOUT_S;
+    static bool     m_timeout_running = true;
 
     __STATIC_INLINE void pwr_mgmt_standby_timeout_clear(void)
     {
@@ -241,6 +242,10 @@ static nrf_drv_wdt_channel_id m_channel_id;
 
     __STATIC_INLINE void pwr_mgmt_standby_timeout_check(void)
     {
+        if (m_timeout_running == false) {
+            return;
+        }
+
         if (m_standby_counter < m_timeout_counter)
         {
             m_standby_counter++;
@@ -523,6 +528,17 @@ void nrf_pwr_mgmt_set_timeout(uint16_t timeout)
 uint16_t nrf_pwr_mgmt_get_timeout()
 {
     return m_timeout_counter;
+}
+
+void pwr_mgmt_standby_timeout_enable()
+{
+    m_timeout_running = true;
+}
+
+void pwr_mgmt_standby_timeout_disable()
+{
+    m_standby_counter = 0;
+    m_timeout_running = false;
 }
 
 #endif // NRF_MODULE_ENABLED(NRF_PWR_MGMT)

@@ -5,6 +5,7 @@
  *      Author: solos
  */
 
+#include "nrf_pwr_mgmt.h"
 #include "ntag_emu.h"
 
 #include "app_scheduler.h"
@@ -178,6 +179,7 @@ static void nfc_callback(void *p_context, hal_nfc_event_t event, const uint8_t *
 
     switch (event) {
     case HAL_NFC_EVENT_FIELD_ON:
+        pwr_mgmt_standby_timeout_disable();
         bsp_board_led_on(BSP_BOARD_LED_0);
         break;
     case HAL_NFC_EVENT_FIELD_OFF:
@@ -189,6 +191,7 @@ static void nfc_callback(void *p_context, hal_nfc_event_t event, const uint8_t *
             ntag_event_type_t type = NTAG_EVENT_TYPE_READ;
             app_sched_event_put(&type, sizeof(ntag_event_type_t), update_ntag_handler);
         }
+        pwr_mgmt_standby_timeout_enable();
         break;
     case HAL_NFC_EVENT_COMMAND:
         // NRF_LOG_INFO("NFC Command Received: %x", p_data[0]);

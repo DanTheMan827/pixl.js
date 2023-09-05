@@ -1,3 +1,4 @@
+#include "nrf_pwr_mgmt.h"
 #include "ble_scene.h"
 #include "app_ble.h"
 #include "ble_main.h"
@@ -11,11 +12,15 @@
 void ble_scene_connect_status_view_event_cb(ble_status_view_event_t event, ble_status_view_t *p_view){
     ble_disable();
     mini_app_launcher_kill(mini_app_launcher(), MINI_APP_ID_BLE);
+
+    pwr_mgmt_standby_timeout_enable();
 }
 
 
 void ble_scene_connect_start_on_enter(void *user_data) {
     app_ble_t *app = user_data;
+
+    pwr_mgmt_standby_timeout_disable();
 
     ble_init();
     ble_device_mode_prepare(BLE_DEVICE_MODE_PIXLJS);
